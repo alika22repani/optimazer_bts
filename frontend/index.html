@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BTS Optimizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <span class="logo">📡</span>
+            <div>
+                <h1>BTS Optimizer</h1>
+                <p>BASE TRANSCEIVER STATION · PLACEMENT SIMULATION</p>
+            </div>
+        </div>
+        <span class="badge">KECERDASAN BUATAN</span>
+    </header>
+
+    <div class="container">
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="sandbox">🗺️ Simulasi</button>
+            <button class="tab-btn" data-tab="compare">⚡ Komparasi</button>
+            <button class="tab-btn" data-tab="about">📖 Tentang</button>
+        </div>
+
+        <!-- TAB: SIMULASI -->
+        <div class="tab-content active" id="tab-sandbox">
+            <div class="layout">
+                <aside class="control-panel">
+                    <div class="panel-section">
+                        <h3>Algoritma</h3>
+                        <div class="algo-group">
+                            <label class="algo-card" data-algo="hc">
+                                <input type="radio" name="algo" value="hill-climbing" checked />
+                                <div class="algo-inner">
+                                    <span class="algo-icon">▲</span> Hill Climbing
+                                </div>
+                            </label>
+                            <label class="algo-card" data-algo="sa">
+                                <input type="radio" name="algo" value="simulated-annealing" />
+                                <div class="algo-inner">
+                                    <span class="algo-icon">❄</span> Simulated Annealing
+                                </div>
+                            </label>
+                            <label class="algo-card" data-algo="ga">
+                                <input type="radio" name="algo" value="genetic-algorithm" />
+                                <div class="algo-inner">
+                                    <span class="algo-icon">⚙</span> Genetic Algorithm
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="panel-section">
+                        <h3>Mode Optimasi</h3>
+                        <select id="mode" class="select">
+                            <option value="coverage">Maksimalkan Coverage</option>
+                            <option value="minimize">Minimasi Jumlah Menara</option>
+                            <option value="cost">Minimasi Biaya</option>
+                        </select>
+                    </div>
+
+                    <div class="panel-section">
+                        <h3>Parameter Umum</h3>
+                        <div class="param">
+                            <label>Jumlah Penduduk: <strong id="val-penduduk">100</strong></label>
+                            <input type="range" id="num_penduduk" min="20" max="300" step="10" value="100" />
+                        </div>
+                        <div class="param">
+                            <label>Jumlah Menara: <strong id="val-menara">5</strong></label>
+                            <input type="range" id="num_menara" min="1" max="20" step="1" value="5" />
+                        </div>
+                        <div class="param">
+                            <label>Radius Coverage: <strong id="val-radius">150</strong></label>
+                            <input type="range" id="radius_coverage" min="50" max="300" step="10" value="150" />
+                        </div>
+                    </div>
+
+                    <div class="panel-section algo-params" id="params-hill-climbing">
+                        <h3>Parameter HC</h3>
+                        <div class="param">
+                            <label>Varian</label>
+                            <select id="hc_variant" class="select">
+                                <option value="simple">Simple HC</option>
+                                <option value="steepest" selected>Steepest-Ascent HC</option>
+                                <option value="stochastic">Stochastic HC</option>
+                            </select>
+                        </div>
+                        <div class="param">
+                            <label>Maks. Iterasi: <strong id="val-hciter">500</strong></label>
+                            <input type="range" id="hc_max_iter" min="100" max="2000" step="100" value="500" />
+                        </div>
+                    </div>
+
+                    <div class="panel-section algo-params hidden" id="params-simulated-annealing">
+                        <h3>Parameter SA</h3>
+                        <div class="param">
+                            <label>Suhu Awal: <strong id="val-suhu">1000</strong></label>
+                            <input type="range" id="sa_suhu_awal" min="100" max="5000" step="100" value="1000" />
+                        </div>
+                        <div class="param">
+                            <label>Cooling Rate: <strong id="val-cooling">0.995</strong></label>
+                            <input type="range" id="sa_cooling_rate" min="0.900" max="0.999" step="0.001"
+                                value="0.995" />
+                        </div>
+                    </div>
+
+                    <div class="panel-section algo-params hidden" id="params-genetic-algorithm">
+                        <h3>Parameter GA</h3>
+                        <div class="param">
+                            <label>Ukuran Populasi: <strong id="val-pop">50</strong></label>
+                            <input type="range" id="ga_populasi" min="10" max="200" step="10" value="50" />
+                        </div>
+                        <div class="param">
+                            <label>Generasi: <strong id="val-gen">100</strong></label>
+                            <input type="range" id="ga_generasi" min="10" max="500" step="10" value="100" />
+                        </div>
+                        <div class="param">
+                            <label>Prob. Crossover: <strong id="val-cx">0.8</strong></label>
+                            <input type="range" id="ga_crossover" min="0.1" max="1.0" step="0.05" value="0.8" />
+                        </div>
+                        <div class="param">
+                            <label>Prob. Mutasi: <strong id="val-mut">0.1</strong></label>
+                            <input type="range" id="ga_mutasi" min="0.01" max="0.5" step="0.01" value="0.1" />
+                        </div>
+                    </div>
+
+                    <div class="panel-section">
+                        <button class="btn-run" id="btn-run">▶ Jalankan Simulasi</button>
+                    </div>
+                </aside>
+
+                <main class="main-area">
+                    <div class="canvas-wrap">
+                        <canvas id="canvas" width="700" height="500"></canvas>
+                        <div class="canvas-hint" id="canvas-hint">
+                            <span class="hint-icon">📡</span>
+                            Tekan "Jalankan Simulasi" untuk mulai
+                        </div>
+                    </div>
+
+                    <div class="result-bar hidden" id="result-bar">
+                        <div class="metric">
+                            <span class="metric-label">Algoritma</span>
+                            <span class="metric-value" id="res-algo">—</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Coverage</span>
+                            <span class="metric-value accent" id="res-coverage">—</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Fitness</span>
+                            <span class="metric-value" id="res-fitness">—</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Menara</span>
+                            <span class="metric-value" id="res-menara">—</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-wrap hidden" id="chart-wrap">
+                        <h4>Kurva Konvergensi</h4>
+                        <canvas id="chart-konvergensi" height="120"></canvas>
+                    </div>
+
+                    <div class="loading hidden" id="loading">
+                        <div class="spinner"></div>
+                        <p>MENJALANKAN SIMULASI...</p>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- TAB: KOMPARASI -->
+        <div class="tab-content hidden" id="tab-compare">
+            <div class="compare-wrap">
+                <div class="compare-header">
+                    <h2>Komparasi Algoritma</h2>
+                    <p>Jalankan ketiga algoritma pada kondisi yang sama dan bandingkan hasilnya secara objektif.</p>
+                    <button class="btn-run" id="btn-compare">⚡ Bandingkan Sekarang</button>
+                </div>
+
+                <div class="compare-cards hidden" id="compare-cards">
+                    <div class="ccard" id="ccard-hc">
+                        <div class="ccard-title">▲ Hill Climbing</div>
+                        <div class="ccard-coverage" id="cc-hc-coverage">—</div>
+                        <div class="ccard-sub" id="cc-hc-fitness">Fitness: —</div>
+                        <canvas id="canvas-hc" width="250" height="180"></canvas>
+                    </div>
+                    <div class="ccard" id="ccard-sa">
+                        <div class="ccard-title">❄ Simulated Annealing</div>
+                        <div class="ccard-coverage" id="cc-sa-coverage">—</div>
+                        <div class="ccard-sub" id="cc-sa-fitness">Fitness: —</div>
+                        <canvas id="canvas-sa" width="250" height="180"></canvas>
+                    </div>
+                    <div class="ccard" id="ccard-ga">
+                        <div class="ccard-title">⚙ Genetic Algorithm</div>
+                        <div class="ccard-coverage" id="cc-ga-coverage">—</div>
+                        <div class="ccard-sub" id="cc-ga-fitness">Fitness: —</div>
+                        <canvas id="canvas-ga" width="250" height="180"></canvas>
+                    </div>
+                </div>
+
+                <div class="winner-box hidden" id="winner-box">
+                    🏆 Solusi Terbaik: <strong id="winner-name">—</strong>
+                    dengan coverage <strong id="winner-coverage">—</strong>
+                </div>
+
+                <div class="chart-wrap hidden" id="chart-compare-wrap">
+                    <h4>Perbandingan Konvergensi</h4>
+                    <canvas id="chart-compare" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: TENTANG -->
+        <div class="tab-content hidden" id="tab-about">
+            <div class="about-wrap">
+                <h2>Tentang Proyek</h2>
+                <p>Simulasi optimasi penempatan menara BTS menggunakan tiga algoritma pencarian lokal dan optimasi. Data
+                    penduduk dibangkitkan secara acak untuk mensimulasikan penyebaran populasi di suatu wilayah.</p>
+
+                <div class="about-grid">
+                    <div class="about-card">
+                        <h3>▲ Hill Climbing</h3>
+                        <p>Bergerak ke solusi tetangga yang lebih baik secara iteratif. Tiga varian: Simple,
+                            Steepest-Ascent, dan Stochastic. Rentan terjebak di local optima.</p>
+                        <span class="pro">✓ Cepat & sederhana</span>
+                        <span class="con">✗ Mudah terjebak local optima</span>
+                    </div>
+                    <div class="about-card">
+                        <h3>❄ Simulated Annealing</h3>
+                        <p>Terinspirasi dari proses pendinginan logam. Menerima solusi lebih buruk dengan probabilitas
+                            Boltzmann P = e^(−ΔE/T) untuk lolos dari local optima.</p>
+                        <span class="pro">✓ Lolos dari local optima</span>
+                        <span class="con">✗ Sensitif terhadap parameter</span>
+                    </div>
+                    <div class="about-card">
+                        <h3>⚙ Genetic Algorithm</h3>
+                        <p>Simulasi evolusi biologis dengan seleksi tournament, crossover, mutasi, dan elitisme. Mampu
+                            mengeksplorasi ruang solusi yang sangat luas.</p>
+                        <span class="pro">✓ Eksplorasi ruang solusi luas</span>
+                        <span class="con">✗ Komputasi lebih berat</span>
+                    </div>
+                </div>
+
+                <div class="tech-wrap">
+                    <h3>Teknologi</h3>
+                    <div class="tech-pills">
+                        <span>Python</span><span>FastAPI</span>
+                        <span>HTML/CSS/JS</span><span>Chart.js</span>
+                        <span>Canvas API</span><span>Uvicorn</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/static/js/chart.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>
